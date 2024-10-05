@@ -1,14 +1,14 @@
-import { createServer } from 'node:http';
+import { createApp, config } from './app.mjs';
 
-const hostname = '127.0.0.1';
-const port = 3000;
+const server = createApp();
 
-const server = createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World');
+server.listen(config.port, () => {
+  console.log(`Server running on port ${config.port}`);
+  console.log(`HTTPS: ${config.useHttps ? 'Enabled' : 'Disabled'}`);
+  console.log(`Public directory: ${config.publicDir}`);
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  // Application specific logging, throwing an error, or other logic here
 });

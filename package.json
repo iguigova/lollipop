@@ -1,0 +1,30 @@
+{
+  "name": "lollipop-nodejs-server",
+  "version": "1.0.0",
+  "description": "An advanced Node.js server application without external frameworks implementing a bazaar for software products and features",
+  "main": "server.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "nodemon server.mjs",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "keywords": [
+    "nodejs",
+    "server",
+    "http",
+    "https",
+    "es6"
+  ],
+  "author": "Oceanhue",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^27.0.6",
+    "nodemon": "^2.0.12",
+    "supertest": "^6.1.4"
+  }
+}
