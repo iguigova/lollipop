@@ -1,30 +1,49 @@
 {
-  "name": "lollipop-nodejs-server",
-  "version": "1.0.0",
-  "description": "An advanced Node.js server application without external frameworks implementing a bazaar for software products and features",
+  "name": "lollipop",
+  "version": "1.1.0",
+  "description": "A node.js server providing APIs for a bazaar for software products and features",
   "main": "server.mjs",
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
     "dev": "nodemon server.mjs",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "generate-certs": "mkdir -p .ssh && openssl req -x509 -newkey rsa:4096 -keyout .ssh/key.pem -out .ssh/cert.pem -days 365 -nodes -subj '/CN=localhost'"
   },
   "keywords": [
     "nodejs",
     "server",
     "http",
     "https",
-    "es6"
+    "es6",
+    "bazaar",
+    "software",
+    "api"
   ],
-  "author": "Oceanhue",
+  "author": "Your Name",
   "license": "MIT",
   "engines": {
     "node": ">=14.0.0"
   },
-  "dependencies": {},
   "devDependencies": {
-    "jest": "^27.0.6",
+    "jest": "^27.5.1",
     "nodemon": "^2.0.12",
-    "supertest": "^6.1.4"
-  }
+    "supertest": "^6.3.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {},
+    "testMatch": [
+      "**/tests/**/*.test.mjs"
+    ],
+    "moduleFileExtensions": ["js", "mjs"]
+  },
+  "nodemonConfig": {
+    "ext": "js,mjs,json"
+  },
+  "files": [
+    "server.mjs",
+    "app.mjs",
+    "utils/env.mjs"
+  ]
 }

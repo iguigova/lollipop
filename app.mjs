@@ -10,6 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const gzip = promisify(zlib.gzip);
+
 const MIME_TYPES = {
   '.html': 'text/html',
   '.css': 'text/css',
@@ -23,12 +24,13 @@ const MIME_TYPES = {
 };
 
 const config = {
-  port: process.env.PORT || 3000,
+  httpPort: process.env.HTTP_PORT || 3000,
+  httpsPort: process.env.HTTPS_PORT || 3443,
   publicDir: process.env.PUBLIC_DIR || path.join(__dirname, 'public'),
   useHttps: process.env.USE_HTTPS === 'true',
   httpsOptions: {
-    key: process.env.HTTPS_KEY_PATH ? fs.readFile(process.env.HTTPS_KEY_PATH) : null,
-    cert: process.env.HTTPS_CERT_PATH ? fs.readFile(process.env.HTTPS_CERT_PATH) : null,
+    key: process.env.HTTPS_KEY_PATH,
+    cert: process.env.HTTPS_CERT_PATH,
   },
 };
 
@@ -107,16 +109,26 @@ function errorHandler(err, req, res) {
   res.end('500 Internal Server Error');
 }
 
-function createApp() {
+async function createApp() {
   const serverCallback = (req, res) => {
     handleRequest(req, res).catch(err => errorHandler(err, req, res));
   };
 
-  if (config.useHttps && config.httpsOptions.key && config.httpsOptions.cert) {
-    return https.createServer(config.httpsOptions, serverCallback);
-  } else {
-    return http.createServer(serverCallback);
+  const httpServer = http.createServer(serverCallback);
+  
+  let httpsServer = null;
+  if (config.useHttps) {
+    try {
+      const key = await fs.readFile(config.httpsOptions.key);
+      const cert = await fs.readFile(config.httpsOptions.cert);
+      httpsServer = https.createServer({ key, cert }, serverCallback);
+    } catch (err) {
+      console.error('Error loading HTTPS credentials:', err);
+      throw err;
+    }
   }
+
+  return { httpServer, httpsServer };
 }
 
 export { createApp, config };

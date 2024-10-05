@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+package-lock.json
+        
+# Logs
+*.log
+npm-debug.log*
+notes.txt
+        
+# Environment variables
+.env
+
+# SSL Certificates
+.ssh/
+*.pem
+
+# Build output
+dist/

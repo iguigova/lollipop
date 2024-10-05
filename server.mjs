@@ -1,12 +1,43 @@
+import parseEnv from './utils/env.mjs';
 import { createApp, config } from './app.mjs';
 
-const server = createApp();
+// Parse .env file and set environment variables
+parseEnv();
 
-server.listen(config.port, () => {
-  console.log(`Server running on port ${config.port}`);
-  console.log(`HTTPS: ${config.useHttps ? 'Enabled' : 'Disabled'}`);
-  console.log(`Public directory: ${config.publicDir}`);
-});
+async function startServer() {
+  try {
+    const { httpServer, httpsServer } = await createApp();
+
+    httpServer.listen(config.httpPort, () => {
+      console.log(`HTTP server running on port ${config.httpPort}`);
+    });
+
+    if (httpsServer) {
+      httpsServer.listen(config.httpsPort, () => {
+        console.log(`HTTPS server running on port ${config.httpsPort}`);
+      });
+    }
+
+    // Graceful shutdown
+    process.on('SIGTERM', () => {
+      console.log('SIGTERM signal received: closing HTTP server');
+      httpServer.close(() => {
+        console.log('HTTP server closed');
+      });
+      if (httpsServer) {
+        httpsServer.close(() => {
+          console.log('HTTPS server closed');
+        });
+      }
+    });
+
+  } catch (err) {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
