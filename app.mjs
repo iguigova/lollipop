@@ -8,18 +8,21 @@ import handleRoutes from './routes.mjs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const config = {
-  httpPort: process.env.HTTP_PORT || 3000,
-  httpsPort: process.env.HTTPS_PORT || 3443,
-  publicDir: process.env.PUBLIC_DIR || path.join(__dirname, 'public'),
-  useHttps: process.env.USE_HTTPS || true,
-  httpsOptions: {
-    key: process.env.HTTPS_KEY_PATH,
-    cert: process.env.HTTPS_CERT_PATH,
-  },
-};
+function getConfig() {
+  return {
+    httpPort: parseInt(process.env.HTTP_PORT || '3000', 10),
+    httpsPort: parseInt(process.env.HTTPS_PORT || '3443', 10),
+    publicDir: process.env.PUBLIC_DIR || path.join(__dirname, 'public'),
+    useHttps: process.env.USE_HTTPS === 'true',
+    httpsOptions: {
+      key: process.env.HTTPS_KEY_PATH,
+      cert: process.env.HTTPS_CERT_PATH,
+    },
+  };
+}
 
 async function createApp() {
+  const config = getConfig();
   console.log('Creating app with config:', JSON.stringify(config, null, 2));
 
   const httpServer = http.createServer((req, res) => {
@@ -63,7 +66,7 @@ async function createApp() {
     console.log('HTTPS server not created (USE_HTTPS is false)');
   }
 
-  return { httpServer, httpsServer };
+  return { httpServer, httpsServer, config };
 }
 
-export { createApp, config };
+export { createApp };

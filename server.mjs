@@ -1,12 +1,12 @@
 import parseEnv from './utils/env.mjs';
-import { createApp, config } from './app.mjs';
+import { createApp } from './app.mjs';
 
 // Parse .env file and set environment variables
 parseEnv();
 
 async function startServer() {
   try {
-    const { httpServer, httpsServer } = await createApp();
+    const { httpServer, httpsServer, config } = await createApp();
 
     httpServer.listen(config.httpPort, () => {
       console.log(`HTTP server running on port ${config.httpPort}`);
