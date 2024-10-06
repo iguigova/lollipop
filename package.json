@@ -8,6 +8,11 @@
     "start": "node server.mjs",
     "dev": "nodemon server.mjs",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:app": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/app.test.mjs",
+    "test:routes": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/routes.test.mjs",
+    "test:utils:files": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/utils/files.test.mjs",
+    "test:utils:env": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/utils/env.test.mjs",
+    "test:utils": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/utils/*",
     "generate-certs": "mkdir -p .ssh && openssl req -x509 -newkey rsa:4096 -keyout .ssh/key.pem -out .ssh/cert.pem -days 365 -nodes -subj '/CN=localhost'"
   },
   "keywords": [
@@ -25,6 +30,7 @@
   "engines": {
     "node": ">=14.0.0"
   },
+  "dependencies": {},
   "devDependencies": {
     "jest": "^27.5.1",
     "nodemon": "^2.0.12",

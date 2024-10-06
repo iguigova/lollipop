@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -38,32 +39,18 @@ describe('parseEnv', () => {
 
     await fs.writeFile(testEnvPath, testEnvContent);
 
-    console.log('Test .env file content:', testEnvContent);
-    console.log('Test .env file path:', testEnvPath);
-
     parseEnv(testEnvPath);
-
-    console.log('process.env after parsing:', process.env);
 
     expect(process.env.TEST_VAR1).toBe('value1');
     expect(process.env.TEST_VAR2).toBe('value2');
     expect(process.env.TEST_VAR3).toBe('value3 with spaces');
     expect(process.env.TEST_VAR4).toBeUndefined();
   });
-    
-  test('should handle non-existent .env file', async () => {
-    // Ensure the file doesn't exist
-    try {
-      await fs.unlink(testEnvPath);
-    } catch (error) {
-      if (error.code !== 'ENOENT') {
-        throw error;
-      }
-    }
 
+  test('should handle non-existent .env file', () => {
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
 
-    parseEnv();
+    parseEnv(testEnvPath);
 
     expect(consoleWarnSpy).toHaveBeenCalledWith('No .env file found. Using default environment variables.');
 

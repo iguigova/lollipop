@@ -38,12 +38,10 @@ export async function cleanupTestCertificates() {
   }
 }
 
-export function mockEnv(envVars) {
-  const originalEnv = process.env;
-  beforeEach(() => {
-    process.env = { ...originalEnv, ...envVars };
-  });
-  afterEach(() => {
+export function setTestEnv(envVars) {
+  const originalEnv = { ...process.env };
+  Object.assign(process.env, envVars);
+  return () => {
     process.env = originalEnv;
-  });
+  };
 }
