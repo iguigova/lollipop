@@ -1,4 +1,4 @@
-import { createApp, config } from '../app.mjs';
+import { createApp } from '../app.mjs';
 import supertest from 'supertest';
 import { generateTestCertificate, cleanupTestCertificates, setTestEnv } from './test.mjs';
 

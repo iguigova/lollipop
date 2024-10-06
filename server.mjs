@@ -1,8 +1,4 @@
-import parseEnv from './utils/env.mjs';
 import { createApp } from './app.mjs';
-
-// Parse .env file and set environment variables
-parseEnv();
 
 async function startServer() {
   try {

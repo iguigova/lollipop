@@ -16,16 +16,11 @@
     "generate-certs": "mkdir -p .ssh && openssl req -x509 -newkey rsa:4096 -keyout .ssh/key.pem -out .ssh/cert.pem -days 365 -nodes -subj '/CN=localhost'"
   },
   "keywords": [
-    "nodejs",
-    "server",
-    "http",
-    "https",
-    "es6",
     "bazaar",
     "software",
     "api"
   ],
-  "author": "Your Name",
+  "author": "oceanhue",
   "license": "MIT",
   "engines": {
     "node": ">=14.0.0"
@@ -46,10 +41,5 @@
   },
   "nodemonConfig": {
     "ext": "js,mjs,json"
-  },
-  "files": [
-    "server.mjs",
-    "app.mjs",
-    "utils/env.mjs"
-  ]
+  }
 }
