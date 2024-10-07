@@ -1,0 +1,17 @@
+[Unit]
+Description=Lollipop App
+After=network.target multi-user.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/lollipop
+ExecStart=/usr/bin/npm start
+Restart=always
+Environment=NODE_ENV=production
+EnvironmentFile=/home/ubuntu/lollipop/.env
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=lollipop
+
+[Install]
+WantedBy=multi-user.target
