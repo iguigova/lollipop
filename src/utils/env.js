@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 function parseEnv(customPath = null) {
-  const envPath = customPath || path.join(__dirname, '..', '.env');
+  const envPath = customPath || path.join(__dirname, '../..', '.env');
   try {
     const envContents = fs.readFileSync(envPath, 'utf-8');
     

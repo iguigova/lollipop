@@ -3,8 +3,8 @@ import https from 'https';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import handleRoutes from './routes.mjs';
-import parseEnv from './utils/env.mjs';
+import handleRoutes from './routes.js';
+import parseEnv from './utils/env.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

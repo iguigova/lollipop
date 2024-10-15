@@ -2,7 +2,7 @@ import { jest } from '@jest/globals';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import parseEnv from '../../utils/env.mjs';
+import parseEnv from '../../dist/utils/env.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

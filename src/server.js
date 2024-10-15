@@ -1,4 +1,4 @@
-import { createApp } from './app.mjs';
+import { createApp } from './app.js';
 
 async function startServer() {
   try {

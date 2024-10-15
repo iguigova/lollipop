@@ -1,6 +1,6 @@
-import { createApp } from '../app.mjs';
+import { createApp } from '../src/app.js';
 import supertest from 'supertest';
-import { generateTestCertificate, cleanupTestCertificates, setTestEnv } from './test.mjs';
+import { generateTestCertificate, cleanupTestCertificates, setTestEnv } from './test.js';
 
 describe('App', () => {
   let app;
