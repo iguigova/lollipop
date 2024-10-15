@@ -13,12 +13,12 @@ export default async function handleRoutes(req, res, config) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(html);
         } else if (url === '/api/time') {
-            // res.writeHead(200, { 'Content-Type': 'application/json' });
-            // res.end(JSON.stringify({ time: new Date().toISOString() }));
-            const time = new Date().toISOString();
-            const html = renderToString(<TimePage time={time} />);
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(html);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ time: new Date().toISOString() }));
+            // const time = new Date().toISOString();
+            // const html = renderToString(<TimePage time={time} />);
+            // res.writeHead(200, { 'Content-Type': 'text/html' });
+            // res.end(html);
         } else if (url.startsWith('/public/')) {
             const filePath = path.join(config.publicDir, url.slice(7));
             await serveStaticFile(req, res, filePath);

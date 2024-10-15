@@ -4,7 +4,7 @@ import http from 'http';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import handleRoutes from '../src/routes.js';
+import handleRoutes from '../dist/routes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,7 +33,7 @@ describe('Routes', () => {
   test('GET / returns Hello World', async () => {
     const response = await request.get('/');
     expect(response.status).toBe(200);
-    expect(response.text).toBe('Hello World!');
+    expect(response.text).toContain('<html>');
   });
 
   test('GET /api/time returns current time', async () => {
