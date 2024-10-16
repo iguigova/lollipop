@@ -9,7 +9,7 @@
         "dev": "nodemon dist/server.js",
         "build": "babel src -d dist --copy-files",
         "watch": "babel src --out-dir dist --copy-files --watch",
-        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --silent --reporters=\"default\"",
         "test:app": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/app.test.js",
         "test:routes": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/routes.test.js",
         "test:utils:files": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/utils/files.test.js",

@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
 import fs from 'fs/promises';
 import zlib from 'zlib';
-import { serveStaticFile } from '../../src/utils/files.js';
+import { serveStaticFile } from '../../dist/utils/files.js';
 
 jest.mock('zlib', () => ({
   gzip: jest.fn((data, callback) => {

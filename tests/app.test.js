@@ -1,4 +1,4 @@
-import { createApp } from '../src/app.js';
+import { createApp } from '../dist/app.js';
 import supertest from 'supertest';
 import { generateTestCertificate, cleanupTestCertificates, setTestEnv } from './test.js';
 
@@ -28,7 +28,7 @@ describe('App', () => {
   test('GET / returns Hello World', async () => {
     const response = await request.get('/');
     expect(response.status).toBe(200);
-    expect(response.text).toBe('Hello World!');
+    expect(response.text).toContain('<html>');
   });
 
   test('GET /api/time returns current time', async () => {
@@ -53,7 +53,7 @@ describe('HTTPS App', () => {
   beforeAll(async () => {
     try {
       const { keyPath, certPath } = await generateTestCertificate();
-      console.log('Test certificates generated:', { keyPath, certPath });
+      //console.log('Test certificates generated:', { keyPath, certPath });
 
       restoreEnv = setTestEnv({
         HTTP_PORT: '3000',
@@ -64,20 +64,18 @@ describe('HTTPS App', () => {
         PUBLIC_DIR: './public'
       });
 
-      console.log('Environment variables set:', JSON.stringify(process.env, null, 2));
+      //console.log('Environment variables set:', JSON.stringify(process.env, null, 2));
 
       const { httpsServer } = await createApp();
-      console.log('HTTPS server created:', httpsServer ? 'Yes' : 'No');
 
       if (!httpsServer) {
-        console.error('HTTPS server was not created, but no error was thrown');
-      } else {
-        httpsApp = httpsServer;
-        httpsRequest = supertest(httpsApp);
+        throw new Error('HTTPS server was not created');
       }
+
+      httpsApp = httpsServer;
+      httpsRequest = supertest(httpsApp);
     } catch (error) {
       console.error('Error in beforeAll:', error);
-      // Don't throw the error, allow tests to run
     }
   });
 
@@ -90,13 +88,8 @@ describe('HTTPS App', () => {
   });
 
   test('HTTPS GET / returns Hello World', async () => {
-    console.log('HTTPS app available:', httpsApp ? 'Yes' : 'No');
-    if (!httpsApp) {
-      console.warn('Skipping HTTPS test because HTTPS server is not available');
-      return;
-    }
-    const response = await httpsRequest.get('/');
+    const response = await httpsRequest.get('/').trustLocalhost(true);
     expect(response.status).toBe(200);
-    expect(response.text).toBe('Hello World!');
+    expect(response.text).toContain('<html>');
   });
 });
