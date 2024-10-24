@@ -17,6 +17,7 @@
         "test:utils:logs": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/utils/logs.test.js",
         "test:utils:callstack": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/utils/callstack.test.js",
         "test:utils:queue": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/utils/queue.test.js",
+        "test:utils:dates": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/utils/dates.test.js",
         "test:utils": "node --experimental-vm-modules node_modules/jest/bin/jest.js -- ./tests/utils/*",
         "generate-certs": "mkdir -p .ssh && openssl req -x509 -newkey rsa:4096 -keyout .ssh/key.pem -out .ssh/cert.pem -days 365 -nodes -subj '/CN=localhost'"
     },
