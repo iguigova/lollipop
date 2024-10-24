@@ -15,11 +15,11 @@ export const isWithin = (date1, date2, interval) => {
     return diff <= getNumOrDefault(interval);
 };
 
-export const isWithinMinute = (date1, date2) => isWithin(date1, date2, MILLISECONDS.MINUTE);
-export const isWithinHour = (date1, date2) => isWithin(date1, date2, MILLISECONDS.HOUR);
-export const isWithinDay = (date1, date2) => isWithin(date1, date2, MILLISECONDS.DAY);
+export const isWithinMinute = (date1, date2 = new Date()) => isWithin(date1, date2, MILLISECONDS.MINUTE);
+export const isWithinHour = (date1, date2 = new Date()) => isWithin(date1, date2, MILLISECONDS.HOUR);
+export const isWithinDay = (date1, date2 = new Date()) => isWithin(date1, date2, MILLISECONDS.DAY);
 
-export const createWithin = (date, offset, interal) => {
+export const createWithin = (interval, offset = 1, date = new Date()) => {
     const baseDate = date instanceof Date ? date : new Date(date); 
-    return new Date(baseDate.getTime() + (geNumOrDefault(offset) * getNumOrDefault(interval)));
+    return new Date(baseDate.getTime() + (getNumOrDefault(offset) * getNumOrDefault(interval)));
 };
