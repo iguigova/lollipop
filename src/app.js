@@ -28,7 +28,7 @@ async function createApp() {
   await parseEnv();
 
   const config = getConfig();
-  asyncLog('Creating app with config:', JSON.stringify(config, null, 2));
+  asyncLog('Creating app with config:', config);
 
   const httpServer = http.createServer((req, res) => {
     handleRoutes(req, res, config).catch(err => {
