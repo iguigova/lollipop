@@ -8,80 +8,86 @@ const queue = [];
 let isProcessing = false;
 
 const safeWrite = (data, encoding = DEFAULT_ENCODING) => 
-  new Promise((resolve, reject) => {
-    if (!stdout?.write || typeof stdout.write !== 'function') {
-      console.log(data);
-      resolve();
-    }
-    
-    stdout.write(data, encoding, (error) => 
-      error ? reject(error) : resolve()
-    );
-  });
+      new Promise((resolve, reject) => {
+          if (!stdout?.write || typeof stdout.write !== 'function') {
+              console.log(data);
+              resolve();
+          }
+          
+          stdout.write(data, encoding, (error) => 
+              error ? reject(error) : resolve()
+          );
+      });
 
 const processQueue = async () => {
-  try {
-    while (queue.length > 0) {
-      await safeWrite(queue.shift());
+    try {
+        while (queue.length > 0) {
+            await safeWrite(queue.shift());
+        }
+    } catch (error) {
+        console.error('Error writing to stdout:', error);
+    } finally {
+        isProcessing = false;
     }
-  } catch (error) {
-    console.error('Error writing to stdout:', error);
-  } finally {
-    isProcessing = false;
-  }
 };
 
 const truncateQueue = () => {
-  if (queue.length >= MAX_QUEUE_SIZE) {
-    console.warn(`Log queue size (${queue.length}) has reached maximum. Oldest logs discarded.`);
-    queue.splice(0, queue.length - MAX_QUEUE_SIZE);
-  }
+    if (queue.length >= MAX_QUEUE_SIZE) {
+        console.warn(`Log queue size (${queue.length}) has reached maximum. Oldest logs discarded.`);
+        queue.splice(0, queue.length - MAX_QUEUE_SIZE);
+    }
 };
 
 const enqueue = (data) => new Promise((resolve) => {
-  queue.push(data);
-  truncateQueue();
-  
-  if (!isProcessing) {
-    isProcessing = true;
-    setImmediate(async () => {
-      await processQueue();
-      resolve();
-    });
-  } else {
-    resolve();
-  }
+    queue.push(data);
+    truncateQueue();
+    
+    if (!isProcessing) {
+        isProcessing = true;
+        setImmediate(async () => {
+            await processQueue();
+            resolve();
+        });
+    } else {
+        resolve();
+    }
 });
 
 const formatMessage = (...args) => args
-  .map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg))
-  .join(' ');
-
+      .map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg))
+      .join(' ');
 
 const createLogMessage = ({
-  message,
-  timestamp = new Date().toISOString(),
-  source,
-  severity = 0,
-  lifespan = new Date(Date.now() + 24 * 60 * 60 * 1000),
-  tags = []
+    message,
+    timestamp = new Date().toISOString(),
+    stack,
+    source,
+    severity = 0,
+    lifespan = new Date(Date.now() + 24 * 60 * 60 * 1000),
+    tags = []
 }) => {
-  const { fileName, lineNumber } = getCallerInfo();
-  
-  return {
-    message: formatMessage(message),
-    timestamp,
-    source: source || `${fileName}:${lineNumber}`,
-    severity: +severity,
-    lifespan: lifespan instanceof Date ? lifespan.toISOString() : new Date(lifespan).toISOString(),
-    tags
-  };
+    const { fileName, lineNumber } = getCallerInfo(stack);
+    
+    return {
+        message: formatMessage(message),
+        timestamp,
+        source: source || `${fileName}:${lineNumber}`,
+        severity: +severity,
+        lifespan: lifespan instanceof Date ? lifespan.toISOString() : new Date(lifespan).toISOString(),
+        tags
+    };
 };
 
 export const asyncLogCustom = async (options = {}) => {
-  const logMessage = createLogMessage(options);
-  await enqueue(JSON.stringify(logMessage) + '\n');
-  return logMessage;
+    const error = new Error()
+    Error.captureStackTrace(error, asyncLog);
+    options.stack = error.stack;
+    
+    const logMessage = createLogMessage(options);
+
+    await enqueue(JSON.stringify(logMessage) + '\n');
+
+    return logMessage;
 };
 
 export const asyncLog = async (...args) => asyncLogCustom({ message: args });
