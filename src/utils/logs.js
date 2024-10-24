@@ -30,9 +30,9 @@ const createLog = ({
     tags = []
 }) => {
     const { fileName, lineNumber } = getCallerInfo(stack);
-    
+   
     return {
-        message: toString(message),
+        message: toString(Array.isArray(message) ?...message : message), // check if message is an array and spread it into toString if it is
         timestamp,
         source: source || `${fileName}:${lineNumber}`,
         severity: +severity,
@@ -49,10 +49,6 @@ export const asyncLogCustom = async (options = {}) => {
     return await enqueueLog(JSON.stringify(createLog(options)));
 };
 
-export const asyncLog = async (...args) => {
-    // If only one argument is passed, use it directly instead of wrapping in array
-    const message = args.length === 1 ? args[0] : args;
-    return asyncLogCustom({ message });
-};
+export const asyncLog = async (...args) => asyncLogCustom({ message: args });
 
 export default asyncLog;
