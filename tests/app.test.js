@@ -1,4 +1,4 @@
-import { createApp } from '../dist/app.js';
+import { httpServer, httpsServer } from '../dist/app.js';
 import supertest from 'supertest';
 import { generateTestCertificate, cleanupTestCertificates, setTestEnv } from './test.js';
 
@@ -15,7 +15,6 @@ describe('App', () => {
       PUBLIC_DIR: './public'
     });
 
-    const { httpServer } = await createApp();
     app = httpServer;
     request = supertest(app);
   });
@@ -65,8 +64,6 @@ describe('HTTPS App', () => {
       });
 
       //console.log('Environment variables set:', JSON.stringify(process.env, null, 2));
-
-      const { httpsServer } = await createApp();
 
       if (!httpsServer) {
         throw new Error('HTTPS server was not created');
