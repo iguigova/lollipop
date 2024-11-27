@@ -1,33 +1,11 @@
 import http from 'http';
 import https from 'https';
 import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import config from "./config.js";
 import handleRoutes from './routes.js';
-import parseEnv from './utils/env.js';
 import asyncLog from './utils/logs.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-function getConfig() {
-  return {
-    httpPort: parseInt(process.env.HTTP_PORT || '3000', 10),
-    httpsPort: parseInt(process.env.HTTPS_PORT || '3443', 10),
-    publicDir: process.env.PUBLIC_DIR || path.join(__dirname, 'public'),
-    useHttps: process.env.USE_HTTPS === 'true',
-    httpsOptions: {
-      key: process.env.HTTPS_KEY_PATH,
-      cert: process.env.HTTPS_CERT_PATH,
-    },
-  };
-}
-
 async function createApp() {
-  // Call parseEnv at the beginning of createApp
-  await parseEnv();
-
-  const config = getConfig();
   asyncLog('Creating app with config:', config);
 
   const httpServer = http.createServer((req, res) => {
